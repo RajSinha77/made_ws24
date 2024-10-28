@@ -1,0 +1,68 @@
+pipeline  TreesFamily{
+
+    TreesFamilyExtractor -> TreesFamilyTextFileInterpreter;
+    TreesFamilyTextFileInterpreter
+      
+	-> TreesFamilyCSVInterpreter 
+        -> TreesSpeciesColumnDeleter
+	-> TreesFamilyTableInterpreter
+	-> TreesFamilyLoader;
+
+    //Uploading the data using url
+    block TreesFamilyExtractor oftype HttpExtractor {
+		url: "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/stadt-neuss-herbstpflanzung-2023/exports/csv";
+	}
+
+    block TreesFamilyTextFileInterpreter oftype TextFileInterpreter { }
+   
+   //loading the data
+    block TreesFamilyCSVInterpreter oftype CSVInterpreter {
+	delimiter : ";" ;
+	}
+
+   //Droping the column E i.e "baumart_deutsch"
+    block TreesSpeciesColumnDeleter oftype ColumnDeleter {
+        delete: [column E];
+	}
+
+  //Creating the table  
+    block TreesFamilyTableInterpreter oftype TableInterpreter {
+		header: true;
+		columns: [
+			"lfd_nr" oftype integer,
+			"stadtteil" oftype City,
+			"standort" oftype text,
+			"baumart_botanisch" oftype text,
+			"baumart_deutsch" oftype text,
+			"id" oftype Geo_Coordinate,
+			"baumfamilie" oftype text	
+		];
+	}
+  
+    block TreesFamilyLoader oftype SQLiteLoader {
+	table: "trees";
+	file: "./trees.sqlite";
+	}
+
+}
+
+//Filtering data where "stadtteil" starts with "Furth-"
+valuetype City oftype text {
+    constraints: [
+        StartsWithFurth,
+    ];
+}
+constraint StartsWithFurth on text:
+    value matches /^Furth-/;
+
+	
+//Validating "id" to ensure correct Geo-Coordinates
+valuetype Geo_Coordinate oftype text {
+    constraints: [
+        GEOID,
+    	];
+}
+constraint GEOID oftype RegexConstraint{
+	regex : /^\d{1,3}\.\d+, \d{1,3}\.\d+$/;
+	}
+   
