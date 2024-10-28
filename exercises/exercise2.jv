@@ -9,9 +9,8 @@ pipeline  TreesFamily{
 	-> TreesFamilyTableInterpreter
 	-> TreesFamilyLoader;
 
-
     //Uploading the data using url
-    block TreesFamilyExtractor oftype CSVExtractor {
+    block TreesFamilyExtractor oftype HttpExtractor {
 		url: "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/stadt-neuss-herbstpflanzung-2023/exports/csv";
 	}
 
@@ -35,7 +34,7 @@ pipeline  TreesFamily{
             "stadtteil" oftype StadtteilVogelgesang,
             "standort" oftype text,
             "baumart_botanisch" oftype text,
-            "id" oftype ID,
+            "id" oftype Geo_Coordinate,
             "baumfamilie" oftype text
         ];
 	}
