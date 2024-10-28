@@ -33,7 +33,6 @@ pipeline  TreesFamily{
 			"stadtteil" oftype City,
 			"standort" oftype text,
 			"baumart_botanisch" oftype text,
-			"baumart_deutsch" oftype text,
 			"id" oftype Geo_Coordinate,
 			"baumfamilie" oftype text	
 		];
