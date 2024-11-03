@@ -2,10 +2,15 @@ import requests
 import zipfile
 import os
 
-class Extractor :
+class Extractor:
     def __init__(self) -> None:
         pass
+
     def extract_unemployment_data(self, api_url, download_path):
+        # Check and create download path if it doesn't exist
+        if not os.path.exists(download_path):
+            os.makedirs(download_path)
+        
         response = requests.get(api_url)
         if response.headers['Content-Type'] == 'application/zip':
             zip_file_path = os.path.join(download_path, 'unemployment_data.zip')
@@ -24,8 +29,11 @@ class Extractor :
         return True
 
     def extract_crime_data(self, api_url, download_path):
+        # Check and create download path if it doesn't exist
+        if not os.path.exists(download_path):
+            os.makedirs(download_path)
+        
         response = requests.get(api_url)
-
         if response.headers['Content-Type'] == 'application/zip':
             zip_file_path = os.path.join(download_path, 'crime_data.zip')
 
