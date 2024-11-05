@@ -1,9 +1,9 @@
 # Project Plan
 
-## Exploring the Correlation Between Unemployment and Crime Rates in G7 Nations and India Over Two Decades (2000-2020)
+## Exploring the Correlation Between Unemployment and Crime Rates in MERCOSUR Countries Over Two Decades (2000-2020)
 
 <!-- Give your project a short title. -->
-Analyzing the impact of unemployment on the crime rate for MERCOSUR Countries requires collecting and examining data from two different datasets: one on unemployment rates and another on crime rates. The correlation between these two variables can provide insights into the relationship between unemployment and crime. 
+Analyzing the impact of unemployment on the crime rate for MERCOSUR Countries (Argentina, Brazil ,Paraguay, Uruguay,Venezuela*, Bolivia** ,Chile,Colombia,Ecuador,Guyana,Peru, Surinam) requires collecting and examining data from two different datasets: one on unemployment rates and another on crime rates. The correlation between these two variables can provide insights into the relationship between unemployment and crime. 
 
 ## Main Question
 
