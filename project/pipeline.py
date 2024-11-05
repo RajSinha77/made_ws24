@@ -1,4 +1,4 @@
-from ETL import extract, transform, load
+from ETL import extract, transform, load 
 import os
 import warnings
 
@@ -9,6 +9,10 @@ def main():
 
     # Set the download path
     download_path = "D:\\Github\\made-ws24\\data"
+
+    # Ensure the download path exists
+    if not os.path.exists(download_path):
+        os.makedirs(download_path)
 
     # Initialize Extractor and extract data
     extractor = extract.Extractor()
@@ -29,19 +33,21 @@ def main():
 
     print("Data transformation completed.")
 
+    # Initialize Loader and define output paths
     loader = load.Loader()
-    # Define output paths
     unemployment_output_path = os.path.join(download_path, 'unemployment.csv')
     crime_output_path = os.path.join(download_path, 'crime.csv')
 
     # Save transformed dataframes to CSV
     loader.load_data_and_save(transformed_unemployment_data, unemployment_output_path)
+    print(f"Unemployment data saved to {unemployment_output_path}")
+
     loader.load_data_and_save(transformed_crime_data, crime_output_path)
+    print(f"Crime data saved to {crime_output_path}")
 
     print("Data loading and saving completed.")
 
     return True
-
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
