@@ -15,25 +15,25 @@ class Transformer:
             '1960', '1961', '1962', '1963', '1964', '1965', '1966', '1967', '1968',
             '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977',
             '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986',
-            '1987', '1988', '1989', '1990', '2022', 'Unnamed: 67'
+            '1987', '1988', '1989', '1990',  '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2022', 'Unnamed: 67'
         ]
 
         unemployment_pre.drop(columns=[col for col in columns_to_drop if col in unemployment_pre.columns], inplace=True, errors='ignore')
         unemployment_pre.drop(columns=['Country Code', 'Indicator Name', 'Indicator Code'], inplace=True, errors='ignore')
 
-        unemployment_pre.dropna(how='all', subset=unemployment_pre.columns[unemployment_pre.columns.get_loc('1991'):], inplace=True)
+        unemployment_pre.dropna(how='all', subset=unemployment_pre.columns[unemployment_pre.columns.get_loc('2001'):], inplace=True)
 
         crime_pre.drop(columns=[col for col in columns_to_drop if col in crime_pre.columns], inplace=True, errors='ignore')
         crime_pre.drop(columns=['Country Code', 'Indicator Name', 'Indicator Code'], inplace=True, errors='ignore')
 
-        # Convert columns from 1991 onwards to numeric, coercing errors to NaN
-        crime_pre.loc[:, '1991':] = crime_pre.loc[:, '1991':].apply(pd.to_numeric, errors='coerce')
+        # Convert columns from 2001 onwards to numeric, coercing errors to NaN
+        crime_pre.loc[:, '2001':] = crime_pre.loc[:, '2001':].apply(pd.to_numeric, errors='coerce')
 
-        # Identify rows with more than 5 NaN values in numeric columns (from 1991 onwards)
-        numeric_crime_data = crime_pre.loc[:, '1991':]
-        countries_with_nulls = numeric_crime_data.isna().sum(axis=1) > 5
+        # Identify rows with more than 3 NaN values in numeric columns (from 1991 onwards)
+        numeric_crime_data = crime_pre.loc[:, '2001':]
+        countries_with_nulls = numeric_crime_data.isna().sum(axis=1) > 3
 
-        # Drop rows where NaN values exceed 6
+        # Drop rows where NaN values exceed 3
         crime_pre_cleaned = crime_pre[~countries_with_nulls]
 
         # Fill NaN values in numeric columns with their mean
