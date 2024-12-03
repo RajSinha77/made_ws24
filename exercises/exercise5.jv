@@ -8,13 +8,13 @@
 	valuetype Coordinates oftype decimal {
         constraints: [AngleRange];}
 
-	constraint only2001 oftype RangeConstraint {
-         lowerBound: 2001;
-         upperBound: 2001;
+	constraint only1925 oftype RangeConstraint {
+         lowerBound: 1925;
+         upperBound: 1925;
          }
 
 	valuetype Zones oftype integer {
-        constraints:[only2001];}
+        constraints:[only1925];}
 
 
 pipeline exercise5
