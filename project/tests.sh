@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Run pytest
-pytest -r ./project/tests
+pytest ./project/tests
