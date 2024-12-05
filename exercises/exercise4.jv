@@ -1,113 +1,105 @@
-pipeline BatteryTemperaturePipeline {
-    TemperatureZipExtractor 
-        -> TemperatureArchiveInterpreter
-        -> TemperatureFilePicker
-        -> TemperaturTextFileInterpreter
-        -> TemperatureCsvInterpreter
-        -> TemperatureColumnCleaner
-        -> TemperatureHeaderTranslation
-        -> TemperatureTableInterpreter
-        -> TemperatureConverter
-        -> BatteryTemperatureConverter
-        -> TemperatureLoader;
-    
-   
+constraint isvalidID oftype RangeConstraint {
+    lowerBound: 0;
+}
 
-    // HTTP Access 
-    block TemperatureZipExtractor oftype HttpExtractor {
+    valuetype valid_ID oftype integer {
+    constraints: [
+        isvalidID,
+    ];
+}
+pipeline ETLpipeline {
+
+    DataExtract
+        -> DataArchiveInterpreter
+        -> DataFile
+        -> DataFileInterpreter
+        -> DataCSV
+        -> CellRangeSelector
+        -> DataColumnDelete
+        -> DataHeaderRename
+        -> DataTableInterpreter
+        -> DataTransformer
+        -> DataTableTransform
+        -> toSqLite;
+
+    
+    transform temperatureunit {
+        from celsius oftype decimal;
+        to fahrenheit oftype decimal;
+        fahrenheit: (celsius * 9/5) + 32;
+    }
+
+
+    block DataExtract oftype HttpExtractor {
         url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
     }
 
-    // File 
-    block TemperatureArchiveInterpreter oftype ArchiveInterpreter {
-        archiveType : "zip";
+    block DataArchiveInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
     }
 
-    // Filesystem 
-    block TemperatureFilePicker oftype FilePicker {
-        path : "./data.csv";
+    block DataFile oftype FilePicker {
+        path: "./data.csv";
     }
 
+    block DataFileInterpreter oftype TextFileInterpreter { }
 
-    block TemperaturTextFileInterpreter oftype TextFileInterpreter {}
-
-    // TextFile to Sheet
-    block TemperatureCsvInterpreter oftype CSVInterpreter {
-        delimiter : ";";
+    block DataCSV oftype CSVInterpreter {
+        delimiter: ";";
     }
 
-    // Delete all columns that are not required
-    block TemperatureColumnCleaner oftype ColumnDeleter {
-        delete: [column F, column G, column H, column I];
+    block CellRangeSelector oftype CellRangeSelector {
+        select: range A1:J*;
     }
 
-  
-    block TemperatureHeaderTranslation oftype CellWriter {
+    block DataColumnDelete oftype ColumnDeleter {
+        delete: [ column F, column G, column H, column I
+        ];
+    }
+
+    block DataHeaderRename oftype CellWriter {
         at: range A1:F1;
-        write: ["id", "producer", "model", "month", "temperature", "battery_temperature"];
+        write: [
+            "id",
+            "producer",
+            "model",
+            "month",
+            "temperature",
+            "battery_temperature"
+        ];
     }
 
-    // Sheet to Table 
-    block TemperatureTableInterpreter oftype TableInterpreter {
-        header : true;
-        columns : [
-            "id" oftype DeviceId, 
-            "producer" oftype text, 
-            "model" oftype text, 
-            "month" oftype Month, 
-            "temperature" oftype decimal, 
+    block DataTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "id" oftype valid_ID,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype integer,
+            "temperature" oftype decimal,
             "battery_temperature" oftype decimal
         ];
     }
 
-    // Table to Table
-    block TemperatureConverter oftype TableTransformer {
-        inputColumns: ["temperature"];
-        outputColumn: "temperature";
-        uses: CelsiusToFahrenheit;
-    }
-
-  
-    block BatteryTemperatureConverter oftype TableTransformer {
-        inputColumns: ["battery_temperature"];
-        outputColumn: "battery_temperature";
-        uses: CelsiusToFahrenheit;
-    }
-
-    // Table to SQlite
-    block TemperatureLoader oftype SQLiteLoader {
-        table : "temperatures";
-        file : "./temperatures.sqlite";
-    }
-
-    // Conversion between °C to °F
-    transform CelsiusToFahrenheit {
-        from tempCelsius oftype decimal;
-        to tempFahrenheit oftype decimal;
-        tempFahrenheit: (tempCelsius * 9/5) + 32;
-    }   
-
-    // Device ID must be larger than 0
-    valuetype DeviceId oftype integer {
-        constraints : [
-            PositiveInteger
+    
+    block DataTransformer oftype TableTransformer {
+        inputColumns: [
+            'temperature'
         ];
+        outputColumn: 'temperature';
+        uses: temperatureunit;
     }
 
-    constraint PositiveInteger oftype RangeConstraint {
-        lowerBound: 0;
-        lowerBoundInclusive : false; 
-    }
-
-    // Month is an integer between 0 and 12
-    valuetype Month oftype integer {
-        constraints : [
-            MonthConstraint
+    block DataTableTransform oftype TableTransformer {
+        inputColumns: [
+            'battery_temperature'
         ];
+        outputColumn: 'battery_temperature';
+        uses: temperatureunit;
     }
 
-    constraint MonthConstraint oftype RangeConstraint {
-        lowerBound : 0;
-        upperBound : 12; 
+    block toSqLite oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
     }
 }
