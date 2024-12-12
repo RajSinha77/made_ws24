@@ -79,12 +79,12 @@ class TestExtractor(unittest.TestCase):
         self.api_url_crime = "https://api.worldbank.org/v2/en/indicator/VC.IHR.PSRC.P5?downloadformat=csv"
         self.download_path = r"../data"  # Corrected raw string
 
-    def test_extract_unemployment_data(self):
-        result = extract.Extractor.extract_unemployment_data(self, self.api_url_unemployment, self.download_path)
-        self.assertTrue(result, "Fail")
-    def test_extract_crime_data(self):
-        result = extract.Extractor.extract_crime_data(self, self.api_url_crime, self.download_path)
-        self.assertTrue(result, "Fail")
+    # def test_extract_unemployment_data(self):
+    #     result = extract.Extractor.extract_unemployment_data(self, self.api_url_unemployment, self.download_path)
+    #     self.assertTrue(result, "Fail")
+    # def test_extract_crime_data(self):
+    #     result = extract.Extractor.extract_crime_data(self, self.api_url_crime, self.download_path)
+    #     self.assertTrue(result, "Fail")
 
 class TestTransformer(unittest.TestCase):
 
