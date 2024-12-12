@@ -7,8 +7,8 @@ class Transformer:
 
     def transform_data_delete_null(self):
         # Load data
-        unemployment_pre = pd.read_csv(r"D:\\Github\\made-ws24\\data\\API_SL.UEM.TOTL.ZS_DS2_en_csv_v2_10162.csv", skiprows=3)
-        crime_pre = pd.read_csv(r"D:\\Github\\made-ws24\\data\\API_VC.IHR.PSRC.P5_DS2_en_csv_v2_20172.csv", skiprows=3)
+        unemployment_pre = pd.read_csv(r"../data/API_SL.UEM.TOTL.ZS_DS2_en_csv_v2_63917.csv", skiprows=3)
+        crime_pre = pd.read_csv(r"../data/API_VC.IHR.PSRC.P5_DS2_en_csv_v2_556.csv", skiprows=3)
 
         # Drop columns with null values (if they exist)
         columns_to_drop = [
@@ -37,7 +37,7 @@ class Transformer:
         crime_pre_cleaned = crime_pre[~countries_with_nulls]
 
         # Fill NaN values in numeric columns with their mean
-        crime_pre_cleaned[numeric_crime_data.columns] = crime_pre_cleaned[numeric_crime_data.columns].fillna(crime_pre_cleaned[numeric_crime_data.columns].mean())
+        crime_pre_cleaned.loc[:, numeric_crime_data.columns] = crime_pre_cleaned[numeric_crime_data.columns].fillna(crime_pre_cleaned[numeric_crime_data.columns].mean())
         unemployment_pre_cleaned = unemployment_pre.fillna(unemployment_pre.mean(numeric_only=True))
 
         return crime_pre_cleaned, unemployment_pre_cleaned

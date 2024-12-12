@@ -8,7 +8,7 @@ def main():
     crime_api_url = "https://api.worldbank.org/v2/en/indicator/VC.IHR.PSRC.P5?downloadformat=csv"
 
     # Set the download path
-    download_path = "D:\\Github\\made-ws24\\data"
+    download_path = "../data"
 
     # Ensure the download path exists
     if not os.path.exists(download_path):

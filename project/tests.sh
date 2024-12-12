@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Run pytest
-pytest ./project/tests
+python3 tests.py
