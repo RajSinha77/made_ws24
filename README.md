@@ -44,8 +44,8 @@ To use this project, follow these steps:
  1. **Clone the Repository:**
    ```bash
 
-git clone https://github.com/RajSinha77/made-ws23
-cd made-ws23
+git clone https://github.com/RajSinha77/made-ws24
+cd made-ws24
 ```
 2.**Run the Pipeline Script:**
 
